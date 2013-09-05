@@ -11,6 +11,7 @@
         var $body = $('body');
         $body.html('');
 
+        /*
         var index = streams.home.length - 1;
         while(index >= 0){
           var tweet = streams.home[index];
@@ -19,6 +20,29 @@
           $tweet.appendTo($body);
           index -= 1;
         }
+        /**/
+
+        /*
+        every time interval, retrieve all tweets:
+        */
+        
+        
+        var displayAllTweets = function() {
+          $("body").html("");
+            var index = streams.home.length - 1;
+          while(index >= 0) {
+            var tweet = streams.home[index];
+            var $tweet = $('<div></div>');
+            $tweet.text('@' + tweet.user + ': ' + tweet.message);
+            $tweet.appendTo($body);
+            index -= 1;
+            //console.log(streams.home);
+          }
+        }
+        var refreshInterval = 1500;
+        displayAllTweets();
+        setInterval(displayAllTweets, refreshInterval);
+
 
       });
 
