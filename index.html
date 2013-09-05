@@ -18,6 +18,9 @@
         font-family: verdana;
         font-size: .7em;
       }
+      .a, a:active, a:hover, a:visited {
+        color: darkgreen;
+      }
       .user {
         display: inline-block;
         width: 150px;
@@ -62,7 +65,8 @@
               //var timeDiffMins = timeDiffSec % 60; 
 
               var $tweet = $('<div class="tweet"></div>');
-              var $user = $('<div class="user"><a href="#"></a></div>');
+              var $user = $('<a href="#" class="user"><div></div></a>');
+              //var $user = $('<div class="user"><a href="#"></a></div>'); // no link; why?
               var $message = $('<div class="message"></div>');
               var $created = $('<div class="timestamp"></div>');
 
@@ -82,12 +86,20 @@
         */
 
         //$("a .user").click(displayTimeline(tweet.user));
-
+        
 
         // show available tweets on page load
         displayAllTweets();
         // refresh every interval
         setInterval(displayAllTweets, refreshInterval);
+
+
+        $("a").click(function () {
+          alert("clicked on user!");
+          //$(this).animate({'left': '-100px'});
+          //$(this).closest("tweet").animate({opacity: 1}, 2000);
+          //$(this).closest("tweet").animate({opacity: 0}, 2000);
+        });
       });
 
     </script>
