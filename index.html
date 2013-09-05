@@ -3,49 +3,94 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <style>
+      #container {
+        width: 800px;
+        margin: 10px auto;
+      }
+      h1 {
+        font-family: "Trebuchet MS";
+      }
+      .tweet {
+        border-bottom: 1px solid lightgrey;
+        padding: 8px 0;
+        position: relative;
+        font-family: verdana;
+        font-size: .7em;
+      }
+      .user {
+        display: inline-block;
+        width: 150px;
+      }
+      .message {
+        display: inline-block;
+      }
+      .timestamp {
+        display: inline-block;
+        float: right;
+      }
+
+    </style>
   </head>
   <body>
+    <div id="container">
+
+
+      <div class="tweet">
+        <div class="user">@user</div>
+        <div class="message">message</div>
+        <div class="timestamp">timestamp</div>
+      </div>
+
     <script>
 
+
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
-
-        /*
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
-        }
-        /**/
-
-        /*
-        every time interval, retrieve all tweets:
-        */
-        
-        
-        var displayAllTweets = function() {
-          $("body").html("");
-            var index = streams.home.length - 1;
-          while(index >= 0) {
-            var tweet = streams.home[index];
-            var $tweet = $('<div></div>');
-            $tweet.text('@' + tweet.user + ': ' + tweet.message);
-            $tweet.appendTo($body);
-            index -= 1;
-            //console.log(streams.home);
-          }
-        }
+        var $container = $('#container');
         var refreshInterval = 1500;
+
+        var displayAllTweets = function() {
+          var index = streams.home.length - 1;
+          $("#container").html('<h1>Twittler (' + index + ' tweets)</h1>');
+            
+            while(index >= 0) {
+              var tweet = streams.home[index];
+              
+              var timeOfTweet = new Date(tweet.created_at).getTime()/1000; // in sec
+              var timeNow = new Date().getTime()/1000; // in sec
+              var timeDiffSec = (timeNow - timeOfTweet).toFixed(); // in sec
+              //var timeDiffMins = timeDiffSec % 60; 
+
+              var $tweet = $('<div class="tweet"></div>');
+              var $user = $('<div class="user"><a href="#"></a></div>');
+              var $message = $('<div class="message"></div>');
+              var $created = $('<div class="timestamp"></div>');
+
+              $user.text('@' + tweet.user);
+              $message.text(tweet.message);
+              $created.text(timeDiffSec + " sec");
+              $tweet.append($user, $message, $created);
+              $tweet.appendTo($container);
+              index -= 1;
+            }
+        }
+        /*
+        var displayTimeline = function (userName) {
+          console.log(streams.user.userName);
+          
+        }
+        */
+
+        //$("a .user").click(displayTimeline(tweet.user));
+
+
+        // show available tweets on page load
         displayAllTweets();
+        // refresh every interval
         setInterval(displayAllTweets, refreshInterval);
-
-
       });
 
     </script>
+  </div>
   </body>
 </html>
