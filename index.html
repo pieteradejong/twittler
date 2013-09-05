@@ -54,7 +54,7 @@
 
         var displayAllTweets = function() {
           var index = streams.home.length - 1;
-          $("#container").html('<h1>Twittler (' + index + ' tweets)</h1>');
+          $("#container").html('<h1>Twittler: Home (' + index + ' tweets)</h1>');
             
             while(index >= 0) {
               var tweet = streams.home[index];
@@ -62,7 +62,6 @@
               var timeOfTweet = new Date(tweet.created_at).getTime()/1000; // in sec
               var timeNow = new Date().getTime()/1000; // in sec
               var timeDiffSec = (timeNow - timeOfTweet).toFixed(); // in sec
-              //var timeDiffMins = timeDiffSec % 60; 
 
               var $tweet = $('<div class="tweet"></div>');
               var $user = $('<a href="#" class="user" data-user="'+ tweet.user +'"><div></div></a>');
@@ -88,6 +87,26 @@
 
           var index = userStream.length - 1;
           $("#container").html('<h1>Twittler: ' + userName + ' (' + index + ' tweets)</h1>');
+          while(index >= 0) {
+              var tweet = userStream[index];
+              
+              var timeOfTweet = new Date(tweet.created_at).getTime()/1000; // in sec
+              var timeNow = new Date().getTime()/1000; // in sec
+              var timeDiffSec = (timeNow - timeOfTweet).toFixed(); // in sec
+
+              var $tweet = $('<div class="tweet"></div>');
+              var $user = $('<a href="#" class="user" data-user="'+ tweet.user +'"><div></div></a>');
+              //var $user = $('<div class="user"><a href="#"></a></div>'); // no link; why?
+              var $message = $('<div class="message"></div>');
+              var $created = $('<div class="timestamp"></div>');
+
+              $user.text('@' + tweet.user);
+              $message.text(tweet.message);
+              $created.text(timeDiffSec + " sec");
+              $tweet.append($user, $message, $created);
+              $tweet.appendTo($container);
+              index -= 1;
+            }
         }
         
         // show all tweets and refresh on intervals
