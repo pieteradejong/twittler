@@ -65,7 +65,7 @@
               //var timeDiffMins = timeDiffSec % 60; 
 
               var $tweet = $('<div class="tweet"></div>');
-              var $user = $('<a href="#" class="user"><div></div></a>');
+              var $user = $('<a href="#" class="user" data-user="'+ tweet.user +'"><div></div></a>');
               //var $user = $('<div class="user"><a href="#"></a></div>'); // no link; why?
               var $message = $('<div class="message"></div>');
               var $created = $('<div class="timestamp"></div>');
@@ -78,29 +78,40 @@
               index -= 1;
             }
         }
-        /*
-        var displayTimeline = function (userName) {
-          console.log(streams.user.userName);
-          
-        }
-        */
-
-        //$("a .user").click(displayTimeline(tweet.user));
         
+        /* display a user's timeline: */
+        var displayTimeline = function(userName) {
+          //console.log(streams.users[userName]);
+          var userStream = streams.users[userName];
+          console.log(userStream);
+          //console.log(streams.users.userName); // 'undefined': why?
 
-        // show available tweets on page load
+          var index = userStream.length - 1;
+          $("#container").html('<h1>Twittler: ' + userName + ' (' + index + ' tweets)</h1>');
+        }
+        
+        // show all tweets and refresh on intervals
         displayAllTweets();
-        // refresh every interval
         setInterval(displayAllTweets, refreshInterval);
 
-
-        $("a").click(function () {
-          alert("clicked on user!");
-          //$(this).animate({'left': '-100px'});
-          //$(this).closest("tweet").animate({opacity: 1}, 2000);
-          //$(this).closest("tweet").animate({opacity: 0}, 2000);
+        // when a username is clicked, load & display that user's timeline:
+        $("#container").on('click', '.user', function() {
+          var user = $(".user").data("user");
+          //console.log(user);
+          displayTimeline(user);
         });
-      });
+
+        /*
+        $("#container").on('click', '.user', function() { // works
+        //$(".tweet").on('click', 'a', function() { // fails: only works on 1st click?
+          console.log("clicked on user!" + Math.random());
+        });
+        */
+
+
+
+        });
+      
 
     </script>
   </div>
