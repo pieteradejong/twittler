@@ -64,7 +64,7 @@
               var timeDiffSec = (timeNow - timeOfTweet).toFixed(); // in sec
 
               var $tweet = $('<div class="tweet"></div>');
-              var $user = $('<a href="#" class="user" data-user="'+ tweet.user +'"><div></div></a>');
+              var $user = $('<a href="#' + tweet.user +  '" class="user" data-user="'+ tweet.user +'"><div></div></a>');
               //var $user = $('<div class="user"><a href="#"></a></div>'); // no link; why?
               var $message = $('<div class="message"></div>');
               var $created = $('<div class="timestamp"></div>');
@@ -114,10 +114,9 @@
         setInterval(displayAllTweets, refreshInterval);
 
         // when a username is clicked, load & display that user's timeline:
-        $("#container").on('click', '.user', function() {
-          var user = $(".user").data("user");
-          //console.log(user);
-          displayTimeline(user);
+        $("#container").on('click', '.user', function(event) {
+          var user = event.target.href.split("#")[1];
+          displayTimeline(streams.user[user]);
         });
 
         /*
