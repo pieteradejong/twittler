@@ -47,56 +47,28 @@
 
     <script>
 
-
       $(document).ready(function(){
         var $container = $('#container');
-        var refreshInterval = 1500;
+        var interval = 1500;
+        var currentIntervalId;
 
-        var displayAllTweets = function() {
-          var index = streams.home.length - 1;
-          $("#container").html('<h1>Twittler: Home (' + index + ' tweets)</h1>');
-            
-            while(index >= 0) {
-              var tweet = streams.home[index];
-              
-              var timeOfTweet = new Date(tweet.created_at).getTime()/1000; // in sec
-              var timeNow = new Date().getTime()/1000; // in sec
-              var timeDiffSec = (timeNow - timeOfTweet).toFixed(); // in sec
+        var displayStream = function(stream) {
+          
+          var index = stream.length - 1;
+          $("#container").html('<h1>Twittler (' + index + ' tweets)</h1>');
+          $("#container").append('<a id="home-stream">Go to home-stream</a>');
 
-              var $tweet = $('<div class="tweet"></div>');
-              var $user = $('<a href="#' + tweet.user +  '" class="user" data-user="'+ tweet.user +'"><div></div></a>');
-              //var $user = $('<div class="user"><a href="#"></a></div>'); // no link; why?
-              var $message = $('<div class="message"></div>');
-              var $created = $('<div class="timestamp"></div>');
 
-              $user.text('@' + tweet.user);
-              $message.text(tweet.message);
-              $created.text(timeDiffSec + " sec");
-              $tweet.append($user, $message, $created);
-              $tweet.appendTo($container);
-              index -= 1;
-            }
-        }
-        
-        /* display a user's timeline: */
-        var displayTimeline = function(userName) {
-          //console.log(streams.users[userName]);
-          var userStream = streams.users[userName];
-          console.log(userStream);
-          //console.log(streams.users.userName); // 'undefined': why?
 
-          var index = userStream.length - 1;
-          $("#container").html('<h1>Twittler: ' + userName + ' (' + index + ' tweets)</h1>');
           while(index >= 0) {
-              var tweet = userStream[index];
+              var tweet = stream[index];
               
-              var timeOfTweet = new Date(tweet.created_at).getTime()/1000; // in sec
-              var timeNow = new Date().getTime()/1000; // in sec
-              var timeDiffSec = (timeNow - timeOfTweet).toFixed(); // in sec
+              var timeOfTweet = new Date(tweet.created_at).getTime()/1000; // seconds
+              var timeNow = new Date().getTime()/1000; // seconds
+              var timeDiffSec = (timeNow - timeOfTweet).toFixed(); // seconds
 
               var $tweet = $('<div class="tweet"></div>');
-              var $user = $('<a href="#" class="user" data-user="'+ tweet.user +'"><div></div></a>');
-              //var $user = $('<div class="user"><a href="#"></a></div>'); // no link; why?
+              var $user = $('<a href="#' + tweet.user +  '" class="user"><div></div></a>');
               var $message = $('<div class="message"></div>');
               var $created = $('<div class="timestamp"></div>');
 
@@ -108,29 +80,25 @@
               index -= 1;
             }
         }
-        
-        // show all tweets and refresh on intervals
-        displayAllTweets();
-        setInterval(displayAllTweets, refreshInterval);
 
-        // when a username is clicked, load & display that user's timeline:
-        $("#container").on('click', '.user', function(event) {
-          var user = event.target.href.split("#")[1];
-          displayTimeline(streams.user[user]);
-        });
+        var setStream = function (stream, interval) {
+          window.clearInterval(currentIntervalId);
+          displayStream(stream);
+          return setInterval(function () {displayStream(stream);} , interval);
+        }
 
-        /*
-        $("#container").on('click', '.user', function() { // works
-        //$(".tweet").on('click', 'a', function() { // fails: only works on 1st click?
-          console.log("clicked on user!" + Math.random());
-        });
-        */
-
-
-
-        });
+        currentIntervalId = setStream(streams.home, interval);
       
+        $("#container").on('click', '.user', function(event) {
+          var username = event.target.href.split("#")[1];
+          currentIntervalId = setStream(streams.users[username], interval);
+        });
+        $("#home-stream").on('click', 'a', function(event){
+          currentIntervalId = setStream(streams.home, interval);
+        })
 
+      });
+      
     </script>
   </div>
   </body>
