@@ -38,7 +38,6 @@
   <body>
     <div id="container">
 
-
       <div class="tweet">
         <div class="user">@user</div>
         <div class="message">message</div>
@@ -56,10 +55,7 @@
           
           var index = stream.length - 1;
           $("#container").html('<h1>Twittler (' + index + ' tweets)</h1>');
-          $("#container").append('<a id="home-stream">Go to home-stream</a>');
-
-
-
+        
           while(index >= 0) {
               var tweet = stream[index];
               
@@ -93,10 +89,7 @@
           var username = event.target.href.split("#")[1];
           currentIntervalId = setStream(streams.users[username], interval);
         });
-        $("#home-stream").on('click', 'a', function(event){
-          currentIntervalId = setStream(streams.home, interval);
-        })
-
+        
       });
       
     </script>
